@@ -2,3 +2,4 @@
 .tar.gz
 .bzip
 .rar
+.gzip

@@ -32,7 +32,7 @@ func getStatusCode(url string) string {
 func scanFiles() {
 
 	for _, fndPTHS := range foundedFolders {
-		fmt.Println("\n************* Starting Scan Backups Files. / Founded PATH : " + fndPTHS + " *************\n")
+		fmt.Println("\n************* Starting Scan Backups Files. / PATH : " + fndPTHS + " *************\n")
 
 		fileslist, err := os.Open(pathF + "/files.txt")
 		if err != nil {
@@ -59,7 +59,7 @@ func scanFiles() {
 				var chckDrm = urlE + " | Response Code : " + lastCheck
 
 				if lastCheck == "200" || lastCheck == "301" || lastCheck == "302" || lastCheck == "304" || lastCheck == "307" || lastCheck == "403" {
-					fmt.Printf("\033[2K\r%s\n", "*Founded :"+chckDrm)
+					fmt.Printf("\033[2K\r%s\n", "* Founded :"+chckDrm)
 					foundedFolders = append(foundedFolders, urlE)
 				} else {
 					fmt.Printf("\033[2K\r%s", "Checking : "+chckDrm)
@@ -69,6 +69,8 @@ func scanFiles() {
 
 		}
 
+		fmt.Printf("\033[2K\r%s", "")
+		fmt.Println("\n************* Scan Ended. / PATH : " + fndPTHS + " *************\n")
 	}
 
 }
@@ -122,6 +124,6 @@ func main() {
 	Host : ` + *hostname + `
 	`)
 
-	startScan := scanPath(folders, *hostname)
-	fmt.Println(startScan)
+	scanPath(folders, *hostname)
+
 }
