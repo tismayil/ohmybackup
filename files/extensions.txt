@@ -3,3 +3,8 @@
 .bzip
 .rar
 .gzip
+.7z
+.bak
+.backup
+.old
+.original
