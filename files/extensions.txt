@@ -8,4 +8,8 @@
 .backup
 .old
 .original
+.orig
 .save
+.sql
+.tmp
+.gho
