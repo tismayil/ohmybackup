@@ -6,8 +6,10 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"net/url"
 	"os"
 	"strconv"
+	"time"
 )
 
 // Randomized User Agent
@@ -20,13 +22,24 @@ var files = "files.txt"
 var folders = "folders.txt"
 var foundedFolders []string
 
-func getStatusCode(url string) string {
+func getStatusCode(combinedURL string) string {
 
-	resp, err := http.Get(url)
+	u, err := url.Parse(combinedURL)
+	client := http.Client{
+		Timeout: 10 * time.Second,
+		CheckRedirect: func(req *http.Request, via []*http.Request) error {
+			return http.ErrUseLastResponse
+		},
+	}
+
+	req := http.Request{
+		URL: u,
+	}
+	response, err := client.Do(&req)
 	if err != nil {
 		log.Fatalln(err)
 	}
-	return strconv.Itoa(resp.StatusCode)
+	return strconv.Itoa(response.StatusCode)
 }
 
 func scanFiles() {
@@ -57,7 +70,6 @@ func scanFiles() {
 				lastCheck = getStatusCode(urlE)
 
 				var chckDrm = urlE + " | Response Code : " + lastCheck
-
 				if lastCheck == "200" || lastCheck == "301" || lastCheck == "302" || lastCheck == "304" || lastCheck == "307" || lastCheck == "403" {
 					fmt.Printf("\033[2K\r%s\n", "* Founded :"+chckDrm)
 					foundedFolders = append(foundedFolders, urlE)
@@ -94,7 +106,7 @@ func scanPath(filename string, hostname string) string {
 
 		var chckDrm = "" + urlE + " | Response Code : " + lastCheck
 
-		if lastCheck == "200" || lastCheck == "301" || lastCheck == "302" || lastCheck == "304" || lastCheck == "307" || lastCheck == "403" {
+		if lastCheck == "200" || lastCheck == "304" || lastCheck == "307" || lastCheck == "403" {
 			fmt.Printf("\033[2K\r%s\n", "* Founded : "+chckDrm)
 			foundedFolders = append(foundedFolders, urlE)
 		} else {
